@@ -1,9 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 from datetime import datetime
+import os
+from flask import Flask
 
 app = Flask(__name__)
 DB_NAME = 'store.db'
+
+@app.route('/')
+def index():
+    return "ระบบสโตร์ออนไลน์ทำงานแล้ว!"
 
 def get_db_connection():
     conn = sqlite3.connect(DB_NAME)
@@ -126,5 +132,5 @@ def history():
     return render_template('history.html', transactions=rows)
 
 if __name__ == '__main__':
-    init_db()
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port, debug=True)
