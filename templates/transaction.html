@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>รายการรับเข้า/เบิกออก</title>
+</head>
+<body>
+    <h1>เพิ่มรายการรับเข้า / เบิกออก</h1>
+    <form method="post">
+        <label>รหัสสินค้า:</label>
+        <select name="product_id">
+            {% for p in products %}
+            <option value="{{ p.product_id }}">{{ p.product_id }} - {{ p.name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label>ประเภท:</label>
+        <select name="type">
+            <option value="in">รับเข้า</option>
+            <option value="out">เบิกออก</option>
+        </select><br><br>
+
+        <label>จำนวน:</label>
+        <input type="number" name="quantity" required><br><br>
+
+        <label>วันที่:</label>
+        <input type="date" name="date" required><br><br>
+
+        <input type="submit" value="บันทึก">
+    </form>
+    <p><a href="{{ url_for('index') }}">← กลับ</a></p>
+</body>
+</html>

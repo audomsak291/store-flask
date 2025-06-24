@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>เพิ่มสินค้าใหม่</title>
+</head>
+<body>
+    <h1>เพิ่มสินค้าใหม่</h1>
+    <form method="post">
+        <label>รหัสสินค้า:</label><input type="text" name="product_id" required><br><br>
+        <label>ชื่อสินค้า:</label><input type="text" name="name" required><br><br>
+        <label>ชื่อจีน:</label><input type="text" name="name_cn"><br><br>
+        <label>รุ่น:</label><input type="text" name="model"><br><br>
+        <label>ขนาด:</label><input type="text" name="size"><br><br>
+        <label>ยอดตั้งต้น:</label><input type="number" name="initial_qty" required><br><br>
+        <input type="submit" value="เพิ่มสินค้า">
+    </form>
+    <p><a href="{{ url_for('index') }}">← กลับ</a></p>
+</body>
+</html>

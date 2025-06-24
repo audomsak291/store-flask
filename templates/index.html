@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>ระบบคลังสินค้า</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    </head>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            text-decoration: none;
+            list-style: none;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Kanit', sans-serif;
+        }
+        nav {
+            background-color: #333;
+            height: 80px;
+            width: 100%;
+        }
+
+        label.logo {
+            color: #fff;
+            font-size: 20px;
+            line-height: 80px;
+            padding: 0 100px;
+            font-weight: bold;
+        }
+        nav ul {
+            float: right;
+            margin-right: 20px;
+        }
+        nav ul li {
+            display: inline-block;
+            line-height: 80px;
+            margin: 0 5px;
+        }
+        nav ul li a {
+            color: #fff;
+            font-size: 17px;
+            padding: 7px 13px;
+            display: block;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+        a.active,a:hover {
+            background: #1b9bff;
+            transition: .5s;
+        }
+        .checkbtn {
+            font-size: 30px;
+            color: #fff;
+            float: right;
+            line-height: 80px;
+            margin-left: 40px;
+            cursor: pointer;
+            display: none;
+        }
+        #check {
+            display: none;
+        }
+        @media (max-width: 952px) {
+            label.logo {
+                font-size: 20px;
+                padding-left: 50px;
+            }
+            nav ul li a {
+                font-size: 16px;
+            }
+        }
+        @media (max-width: 858px) {
+            .checkbtn {
+                display: block;
+            }
+            ul {
+                position: fixed;
+                width: 100%;
+                height: 100vh;
+                background: #2c3e50;
+                top: 80px;
+                left: -100%;
+                text-align: center;
+                transition: all .5s;
+            }
+            nav ul li {
+                display: block;
+                margin: 50px 0;
+                line-height: 30px;
+            }
+            nav ul li a {
+                font-size: 20px;
+            }
+            a:hover,a.active {
+                background: none;
+                color: #0082e6;
+            }
+            #check:checked ~ ul {
+                left: 0;
+            }
+        }
+
+
+
+
+
+
+
+        .scroll-table {
+            max-height: 500px; /* ปรับความสูงตามต้องการ */
+            overflow-y: auto;
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            position: sticky;
+            top: 0;
+            background-color: #f2f2f2;
+            z-index: 1;
+        }
+        /* Modal styles */
+        .modal {
+            display: none; /* ซ่อนปกติ */
+            position: fixed;
+            z-index: 10;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 400px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+
+    </style>
+
+
+    <body>
+        <nav>
+            <input type="checkbox" id="check">
+            <label for="check" class="checkbtn">
+                <i class="fas fa-bars"></i>
+            </label>
+            <label class="logo">บริษัท ฟู่ หยู่ อิมพอร์ต เอ็กซ์พอร์ต จำกัด</label>
+            <ul>
+                <li><a class="active" href="#">หน้าหลัก</a></li>
+                <li><a href="#">รายการสินค้า</a></li>
+                <li><a href="#">รายการรับเข้า</a></li>
+                <li><a href="#">รายการเบิกออก</a></li> 
+                <li><a href="#">รายงานรับเข้า/เบิกออก</a></li>
+                <li><a href="#">รายงานสั่งซื้อ</a></li>
+            </ul>
+
+        </nav>
+
+        <div class="menu">
+            <button id="btnAddProduct">+ เพิ่มสินค้าใหม่</button>
+            <button id="btnTransaction">+ รับเข้า/เบิกออก</button>
+        </div>
+
+        
+
+
+
+        <!-- ตารางสินค้า -->
+        <div class="scroll-table">
+            <table border="1" style="border-collapse: collapse; width: 100%;">
+                <thead>
+                    <tr>
+                        <th>รหัส</th>
+                        <th>ชื่อ</th>
+                        <th>ชื่อจีน</th>
+                        <th>รุ่น</th>
+                        <th>ขนาด</th>
+                        <th>ยอดตั้งต้น</th>
+                        <th>คงเหลือ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in products %}
+                    <tr>
+                        <td>{{ p.product_id }}</td>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.name_cn }}</td>
+                        <td>{{ p.model }}</td>
+                        <td>{{ p.size }}</td>
+                        <td>{{ p.initial_qty }}</td>
+                        <td>{{ p.stock_qty }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- ปุ่มเปิด popup -->
+        <button id="btnAddProduct">+ เพิ่มสินค้าใหม่</button>
+        <button id="btnTransaction">+ รับเข้า/เบิกออก</button>
+
+        <!-- Modal เพิ่มสินค้าใหม่ -->
+        <div id="modalAddProduct" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeAddProduct">&times;</span>
+            <h2>เพิ่มสินค้าใหม่</h2>
+            <form id="formAddProduct" method="post" action="/add_product">
+            <label>รหัสสินค้า:</label><br><input type="text" name="product_id" required><br><br>
+            <label>ชื่อสินค้า:</label><br><input type="text" name="name" required><br><br>
+            <label>ชื่อจีน:</label><br><input type="text" name="name_cn"><br><br>
+            <label>รุ่น:</label><br><input type="text" name="model"><br><br>
+            <label>ขนาด:</label><br><input type="text" name="size"><br><br>
+            <label>ยอดตั้งต้น:</label><br><input type="number" name="initial_qty" required><br><br>
+            <input type="submit" value="เพิ่มสินค้า">
+            </form>
+        </div>
+        </div>
+
+        <!-- Modal รับเข้า/เบิกออก -->
+        <div id="modalTransaction" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeTransaction">&times;</span>
+            <h2>รับเข้า / เบิกออก</h2>
+            <form id="formTransaction" method="post" action="/transaction">
+            <label>รหัสสินค้า:</label><br>
+            <select name="product_id" required>
+                {% for p in products %}
+                <option value="{{ p.product_id }}">{{ p.product_id }} - {{ p.name }}</option>
+                {% endfor %}
+            </select><br><br>
+            <label>ประเภท:</label><br>
+            <select name="type" required>
+                <option value="in">รับเข้า</option>
+                <option value="out">เบิกออก</option>
+            </select><br><br>
+            <label>จำนวน:</label><br><input type="number" name="quantity" required><br><br>
+            <label>วันที่:</label><br><input type="date" name="date" required><br><br>
+            <input type="submit" value="บันทึก">
+            </form>
+        </div>
+        </div>
+
+        <script>
+        // Get modal elements
+        const modalAdd = document.getElementById('modalAddProduct');
+        const modalTrans = document.getElementById('modalTransaction');
+
+        // Get buttons
+        const btnAdd = document.getElementById('btnAddProduct');
+        const btnTrans = document.getElementById('btnTransaction');
+
+        // Get <span> to close
+        const closeAdd = document.getElementById('closeAddProduct');
+        const closeTrans = document.getElementById('closeTransaction');
+
+        // Open modal
+        btnAdd.onclick = () => modalAdd.style.display = 'block';
+        btnTrans.onclick = () => modalTrans.style.display = 'block';
+
+        // Close modal
+        closeAdd.onclick = () => modalAdd.style.display = 'none';
+        closeTrans.onclick = () => modalTrans.style.display = 'none';
+
+        // Close when click outside modal content
+        window.onclick = e => {
+        if (e.target == modalAdd) modalAdd.style.display = 'none';
+        if (e.target == modalTrans) modalTrans.style.display = 'none';
+        }
+        </script>
+
+    </body>
+</html>

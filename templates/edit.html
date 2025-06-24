@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+<head><title>แก้ไขสินค้า</title></head>
+<body>
+<h1>แก้ไขสินค้า</h1>
+<form method="post">
+  รหัสสินค้า: <input type="text" name="code" value="{{ product['code'] }}" required><br>
+  ชื่อสินค้า: <input type="text" name="name" value="{{ product['name'] }}" required><br>
+  <button type="submit">บันทึก</button>
+</form>
+<a href="{{ url_for('index') }}">กลับหน้าหลัก</a>
+</body>
+</html>

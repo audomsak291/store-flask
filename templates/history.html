@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ประวัติรายการ</title>
+</head>
+<body>
+    <h1>ประวัติรับเข้า/เบิกออก</h1>
+    <table border="1">
+        <tr>
+            <th>วันที่</th>
+            <th>รหัส</th>
+            <th>ชื่อสินค้า</th>
+            <th>ประเภท</th>
+            <th>จำนวน</th>
+        </tr>
+        {% for t in transactions %}
+        <tr>
+            <td>{{ t.date }}</td>
+            <td>{{ t.product_id }}</td>
+            <td>{{ t.name }}</td>
+            <td>{{ 'รับเข้า' if t.type == 'in' else 'เบิกออก' }}</td>
+            <td>{{ t.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <p><a href="{{ url_for('index') }}">← กลับ</a></p>
+</body>
+</html>
